@@ -1,2 +1,0 @@
-ripgrep
-fd (fd-find on Ubuntu)

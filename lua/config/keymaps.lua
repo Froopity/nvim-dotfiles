@@ -1,7 +1,8 @@
 -- Use `jk` to exit insert mode
 vim.keymap.set('i', 'jk', '<Esc>')
 
--- Allow exiting terminal mode with esc
+-- Terminal shortcut and exit with esc
+vim.keymap.set('n', '<leader>t', ':terminal<CR>', opts)
 vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 
 -- Use alt-direction to switch windows, even in insert mode
