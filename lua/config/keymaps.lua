@@ -14,3 +14,6 @@ vim.keymap.set('n', '<A-h>', '<C-w>h')
 vim.keymap.set('n', '<A-j>', '<C-w>j')
 vim.keymap.set('n', '<A-k>', '<C-w>k')
 vim.keymap.set('n', '<A-l>', '<C-w>l')
+
+-- LSP keymaps
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error under cursor' })
