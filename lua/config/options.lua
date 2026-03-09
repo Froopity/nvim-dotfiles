@@ -39,5 +39,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 })
 
 -- idk
-vim.cmd('packadd! nohlsearch')
+-- vim.cmd('packadd! nohlsearch')
 

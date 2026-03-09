@@ -1,30 +1,36 @@
 return {
     'nvim-telescope/telescope.nvim',
     version = '*', -- Recommended for Neovim 0.11+ compatibility
-    dependencies = { 
+    dependencies = {
         'nvim-lua/plenary.nvim',
         { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
         'nvim-tree/nvim-web-devicons', -- Optional: for file icons
     },
     config = function()
         local telescope = require("telescope")
-        
         telescope.setup({
-            defaults = {
-                path_display = { "smart" },
-                file_ignore_patterns = { ".git/" },
-                mappings = {
-                    i = {
-                        ["<C-k>"] = require("telescope.actions").move_selection_previous,
-                        ["<C-j>"] = require("telescope.actions").move_selection_next,
-                    },
-                },
-            },
-            pickers = {
-              find_files = {
-                hidden = true
+          defaults = {
+            path_display = { "smart" },
+            file_ignore_patterns = { "%.git/" }, -- Use %. to escape the dot in Lua patterns
+            mappings = {
+              i = {
+                ["<C-k>"] = require("telescope.actions").move_selection_previous,
+                ["<C-j>"] = require("telescope.actions").move_selection_next,
               },
             },
+          },
+          pickers = {
+            find_files = {
+              no_ignore = true,
+              hidden = true,
+              follow = true,
+            },
+            live_grep = {
+              additional_args = function(opts)
+                return { "--unrestricted", "--follow" } -- Required for live_grep to see ignored files
+              end
+            },
+          },
         })
 
         -- Load the fzf extension for better sorting performance
@@ -36,5 +42,8 @@ return {
         vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
         vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
         vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
+        vim.keymap.set('n', '<leader>fn', function()
+          builtin.find_files({ cwd = vim.fn.expand('~/.config/nvim') })
+        end, { desc = 'Telescope find nvim files' })
     end
 }
