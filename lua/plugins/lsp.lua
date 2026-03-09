@@ -1,6 +1,6 @@
 return {
   'neovim/nvim-lspconfig',
-  dependencies = { 'williamboman/mason.nvim' },
+  dependencies = { 'williamboman/mason.nvim', 'williamboman/mason-lspconfig.nvim' },
   config = function()
     require('mason').setup()
 
@@ -10,7 +10,12 @@ return {
     end
 
     local ok, servers = pcall(require, 'user.local_lsp')
-    if not ok then return end
+    if not ok then
+      vim.notify('LSP: failed to load user.local_lsp: ' .. servers, vim.log.levels.ERROR)
+      return
+    end
+
+    require('mason-lspconfig').setup({ ensure_installed = servers })
 
     for _, name in ipairs(servers) do
       local found, config = pcall(require, 'lsp.' .. name)
@@ -39,17 +44,5 @@ return {
       end,
     })
 
-    local registry = require('mason-registry')
-    registry.refresh(function()
-      for _, name in ipairs(servers) do
-        local found, pkg = pcall(registry.get_package, name)
-        if found and not pkg:is_installed() then
-          local _, install_err = pcall(pkg.install, pkg)
-          if install_err then
-            vim.notify('Mason install failed: ' .. name .. ': ' .. install_err, vim.log.levels.WARN)
-          end
-        end
-      end
-    end)
   end,
 }
