@@ -18,4 +18,4 @@ vim.keymap.set('n', '<A-l>', '<C-w>l')
 -- LSP keymaps
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error under cursor' })
 
-vim.keymap.set('n', '<leader>/', ':nohlsearch<CR>', { desc = 'Remove search highlights' })
+vim.keymap.set('n', '<leader>/', ':nohlsearch<CR>', { silent = true, desc = 'Remove search highlights' })

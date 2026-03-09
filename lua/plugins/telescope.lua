@@ -45,5 +45,8 @@ return {
         vim.keymap.set('n', '<leader>fn', function()
           builtin.find_files({ cwd = vim.fn.expand('~/.config/nvim') })
         end, { desc = 'Telescope find nvim files' })
+        vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = 'Telescope diagnostics' })
+        vim.keymap.set('n', '<leader>flr', builtin.lsp_references, { desc = 'Telescope LSP references' })
+        vim.keymap.set('n', '<leader>fls', builtin.lsp_document_symbols, { desc = 'Telescope document symbols' })
     end
 }
