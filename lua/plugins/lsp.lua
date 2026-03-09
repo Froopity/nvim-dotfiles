@@ -1,87 +1,53 @@
 return {
-  "neovim/nvim-lspconfig",
-  dependencies = {
-    "williamboman/mason.nvim",
-  },
+  'neovim/nvim-lspconfig',
+  dependencies = { 'williamboman/mason.nvim' },
   config = function()
-    -- 1. Setup Mason
-    require("mason").setup()
+    require('mason').setup()
 
-    -- 2. IMPORTANT: Prepend Mason's bin directory to the PATH
-    -- This ensures 'vim.lsp.enable' can actually find the executables
-    local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
-    vim.env.PATH = mason_bin .. ":" .. vim.env.PATH
-
-    -- 3. Load local list
-    local has_local, servers = pcall(require, "user.local_lsp")
-    if not has_local then return end
-
-    -- 4. Prepare capabilities (using the new native-friendly way)
-    local capabilities = vim.lsp.protocol.make_client_capabilities()
-    local has_cmp, cmp_lsp = pcall(require, "cmp_nvim_lsp")
-    if has_cmp then
-      capabilities = cmp_lsp.default_capabilities(capabilities)
+    local mason_bin = vim.fn.stdpath('data') .. '/mason/bin'
+    if not vim.env.PATH:find(mason_bin, 1, true) then
+      vim.env.PATH = mason_bin .. ':' .. vim.env.PATH
     end
 
-    -- 5. Define server-specific overrides
-    local server_configs = {
-      pyright = {
-        settings = {
-          python = {
-            analysis = { autoSearchPaths = true },
-          },
-        },
-        on_init = function(client)
-          local venv = vim.fn.getcwd() .. '/.venv'
-          if vim.env.VIRTUAL_ENV then
-            client.config.settings.python.pythonPath = vim.env.VIRTUAL_ENV .. '/bin/python'
-          elseif vim.fn.executable(venv .. '/bin/python') == 1 then
-            client.config.settings.python.pythonPath = venv .. '/bin/python'
-          end
-        end,
-      },
-      lua_ls = {
-        settings = {
-          Lua = {
-            diagnostics = {
-              -- This tells lua_ls that 'vim' is a valid global variable
-              globals = { "vim" },
-            },
-            workspace = {
-              -- This makes the server aware of Neovim runtime files
-              library = vim.api.nvim_get_runtime_file("", true),
-              checkThirdParty = false,
-            },
-          },
-        },
-      },
-    }
+    local ok, servers = pcall(require, 'user.local_lsp')
+    if not ok then return end
 
-    -- 6. Enable servers using the 0.11+ Native Way
-    for _, server_name in ipairs(servers) do
-      local config = server_configs[server_name] or {}
-
-      -- Merge your base capabilities into the specific server config
-      config.capabilities = vim.tbl_deep_extend("force", capabilities, config.capabilities or {})
-
-      -- 0.11 Way: Set the configuration for the server first
-      vim.lsp.config(server_name, config)
-
-      -- Then enable it
-      local ok, err = pcall(vim.lsp.enable, server_name)
-
-      if not ok then
-        vim.notify("LSP Config Error for " .. server_name .. ": " .. err, vim.log.levels.ERROR)
+    for _, name in ipairs(servers) do
+      local found, config = pcall(require, 'lsp.' .. name)
+      vim.lsp.config(name, found and config or {})
+      local enabled, err = pcall(vim.lsp.enable, name)
+      if not enabled then
+        vim.notify('LSP: ' .. name .. ': ' .. err, vim.log.levels.ERROR)
       end
     end
 
-    -- 7. Auto-install logic (Mason Registry)
-    local registry = require("mason-registry")
-    registry.refresh(function() -- Ensure registry is fresh
-      for _, server_name in ipairs(servers) do
-        local ok, p = pcall(registry.get_package, server_name)
-        if ok and not p:is_installed() then
-          p:install()
+    vim.api.nvim_create_autocmd('LspAttach', {
+      callback = function(args)
+        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        if not client or not client:supports_method('textDocument/completion') then return end
+
+        local cp = client.server_capabilities.completionProvider
+        if cp then
+          local word_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_'
+          local set = {}
+          for _, c in ipairs(cp.triggerCharacters or {}) do set[c] = true end
+          for i = 1, #word_chars do set[word_chars:sub(i, i)] = true end
+          cp.triggerCharacters = vim.tbl_keys(set)
+        end
+
+        vim.lsp.completion.enable(true, client.id, args.buf, { autotrigger = true })
+      end,
+    })
+
+    local registry = require('mason-registry')
+    registry.refresh(function()
+      for _, name in ipairs(servers) do
+        local found, pkg = pcall(registry.get_package, name)
+        if found and not pkg:is_installed() then
+          local _, install_err = pcall(pkg.install, pkg)
+          if install_err then
+            vim.notify('Mason install failed: ' .. name .. ': ' .. install_err, vim.log.levels.WARN)
+          end
         end
       end
     end)

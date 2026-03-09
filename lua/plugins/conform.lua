@@ -5,7 +5,7 @@ return {
     require("conform").setup({
       formatters_by_ft = {
         lua = { "stylua" },
-        python = { "ruff", lsp_format = "fallback" },
+        python = { "ruff" },
         fish = { "fish_indent" },
         html = { "html_beautify" },
         markdown = { "markdownfmt" },
