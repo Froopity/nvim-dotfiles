@@ -13,6 +13,7 @@ return {
     skip_confirm_for_simple_edits = true,
   },
   keys = {
-    { "<leader>o", "<CMD>Oil<CR>", desc = "Open Oil" },
+    { "<leader>oo", "<CMD>Oil<CR>",                desc = "Open Oil" },
+    { "<leader>on", "<CMD>Oil ~/.config/nvim<CR>", desc = "Open Oil" },
   },
 }

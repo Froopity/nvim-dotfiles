@@ -25,6 +25,9 @@ vim.o.list = true
 -- Show dialog when exiting without saving
 vim.o.confirm = true
 
+-- Options to avoid hit-enter prompt on startup
+vim.o.cmdheight = 2
+
 -- Set tabs to 2 spaces
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
@@ -43,4 +46,3 @@ vim.api.nvim_create_autocmd('TextYankPost', {
 
 -- idk
 -- vim.cmd('packadd! nohlsearch')
-
