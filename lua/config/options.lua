@@ -25,8 +25,8 @@ vim.o.list = true
 -- Show dialog when exiting without saving
 vim.o.confirm = true
 
--- Options to avoid hit-enter prompt on startup
-vim.o.cmdheight = 2
+vim.o.splitbelow = true
+vim.o.splitright = true
 
 -- Set tabs to 2 spaces
 vim.o.tabstop = 2
@@ -44,5 +44,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- idk
+-- Something about removing hl after search, didn't appear to work
 -- vim.cmd('packadd! nohlsearch')

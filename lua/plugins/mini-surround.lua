@@ -2,6 +2,7 @@ return {
   "nvim-mini/mini.surround",
   version = false,
   config = function()
+
     require('mini.surround').setup({
       custom_surroundings = {
         -- Invert brackets: ( for no space, ) for space

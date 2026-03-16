@@ -1,10 +1,13 @@
 return {
   "folke/snacks.nvim",
-  opts = {
-    scratch = { enabled = true }
-  },
-  keys = {
-    { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratchpad" },
-    { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratchpad" },
-  }
+  config = function()
+    local snacks = require('snacks')
+    snacks.setup({
+      scratch = {},
+      indent = {},
+    })
+
+    vim.keymap.set('n', '<leader>.', function() snacks.scratch() end, { desc = "Toggle Scratchpad" })
+    vim.keymap.set('n', '<leader>S', function() snacks.scratch.select() end, { desc = "Select Scratchpad" })
+  end
 }
