@@ -1,5 +1,6 @@
 return {
   "alfaix/nvim-zoxide",
+  cmd = { "Z", "Zi" },
   dependencies = { "nvim-lua/plenary.nvim" },
   opts = {
     define_commands = true,

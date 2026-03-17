@@ -6,6 +6,11 @@ return {
     { 'nvim-telescope/telescope-fzf-native.nvim', build = 'make' },
     'nvim-tree/nvim-web-devicons', -- Optional: for file icons
   },
+  keys = {
+    "<leader>fr", "<leader>ff", "<leader>fb", "<leader>fg", "<leader>fG",
+    "<leader>fh", "<leader>fn", "<leader>fd", "<leader>flr", "<leader>fls",
+    "<leader>bs", "<leader>fs",
+  },
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
