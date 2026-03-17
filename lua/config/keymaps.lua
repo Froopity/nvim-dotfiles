@@ -21,6 +21,12 @@ vim.keymap.set('n', 'gp', "'[v`]", { desc = "Select last pasted text" })
 -- Enter empty lines without switching to insert mode
 vim.keymap.set('n', '<CR>', 'o<Esc>')
 vim.keymap.set('n', '<S-CR>', 'm`O<Esc>``')
+vim.api.nvim_create_autocmd("FileType", { -- Unmap enter when in QuickFix
+  pattern = "qf,minifiles",
+  callback = function()
+    vim.keymap.set("n", "<CR>", "<CR>", { buffer = true })
+  end,
+})
 
 -- LSP keymaps
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error under cursor' })

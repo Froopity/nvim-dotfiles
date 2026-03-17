@@ -9,25 +9,45 @@ return {
   config = function()
     local telescope = require("telescope")
     local actions = require("telescope.actions")
+    local action_layout = require("telescope.actions.layout")
     telescope.setup({
       defaults = {
         path_display = { "smart" },
         file_ignore_patterns = { "%.git/" }, -- Use %. to escape the dot in Lua patterns
+        sorting_strategy = "ascending",
+        layout_strategy = 'vertical',
+        layout_config = {
+          vertical = {
+            mirror = true,
+            prompt_position = "top",
+            preview_height = 0.3,
+          },
+        },
+        history = {
+          path = '~/.local/share/nvim/databases/telescope_history.sqlite3',
+          limit = 100,
+        },
         mappings = {
           i = {
             ["<C-k>"] = actions.move_selection_previous,
             ["<C-j>"] = actions.move_selection_next,
+            ["<Down>"] = actions.cycle_history_next,
+            ["<Up>"] = actions.cycle_history_prev,
             ["<C-h>"] = actions.preview_scrolling_left,
             ["<C-l>"] = actions.preview_scrolling_right,
             ["<C-d>"] = actions.delete_buffer,
+            ["<C-t>"] = action_layout.toggle_preview,
             ["<esc>"] = actions.close,
           },
           n = {
             ["<C-k>"] = actions.move_selection_previous,
             ["<C-j>"] = actions.move_selection_next,
+            ["<Down>"] = actions.cycle_history_next,
+            ["<Up>"] = actions.cycle_history_prev,
             ["<C-h>"] = actions.preview_scrolling_left,
             ["<C-l>"] = actions.preview_scrolling_right,
             ["<C-d>"] = actions.delete_buffer,
+            ["<C-t>"] = action_layout.toggle_preview,
           },
         },
       },
@@ -50,7 +70,8 @@ return {
         },
       },
       extensions = {
-        ["zoxide"] = {}
+        ["zoxide"] = {},
+        ["smart_history"] = {},
       }
     })
 
@@ -59,6 +80,7 @@ return {
 
     -- Keymaps
     local builtin = require('telescope.builtin')
+    vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = 'Telescope find files' })
     vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
     vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
     vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
@@ -72,6 +94,7 @@ return {
     vim.keymap.set('n', '<leader>fls', builtin.lsp_document_symbols, { desc = 'Telescope document symbols' })
 
     local function snacks_scratch_telescope()
+      local scratch = require("snacks").scratch
       local pickers = require("telescope.pickers")
       local finders = require("telescope.finders")
       local conf = require("telescope.config").values
@@ -79,7 +102,7 @@ return {
       local action_state = require("telescope.actions.state")
       local themes = require("telescope.themes")
 
-      local items = Snacks.scratch.list()
+      local items = scratch.list()
 
       -- Sort by modification time (newest first)
       table.sort(items, function(a, b)
@@ -129,7 +152,7 @@ return {
             actions.close(prompt_bufnr)
 
             -- Crucial fix: Pass the file path to open the existing scratch
-            Snacks.scratch.open({
+            scratch.open({
               file = selection.value.file,
               name = selection.value.name,
               ft = selection.value.ft,
