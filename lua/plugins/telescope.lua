@@ -1,3 +1,82 @@
+local function snacks_scratch_telescope()
+  local scratch = require("snacks").scratch
+  local pickers = require("telescope.pickers")
+  local finders = require("telescope.finders")
+  local conf = require("telescope.config").values
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+  local themes = require("telescope.themes")
+
+  local items = scratch.list()
+
+  -- Sort by modification time (newest first)
+  table.sort(items, function(a, b)
+    return a.stat.mtime.sec > b.stat.mtime.sec
+  end)
+
+  -- Dropdown appearance, but vertical with preview on top
+  local opts = themes.get_dropdown({
+    border = true,
+    previewer = true,
+    layout_strategy = "vertical",
+    layout_config = {
+      prompt_position = "top",
+      mirror = true, -- Flips layout: Preview moves to the top
+      width = 0.8,
+      height = 0.9,
+      preview_cutoff = 1,
+      anchor = "N",
+    },
+  })
+
+  pickers.new(opts, {
+    prompt_title = "Snacks Scratch Context",
+    finder = finders.new_table({
+      results = items,
+      entry_maker = function(entry)
+        local pretty_path = vim.fn.fnamemodify(entry.cwd, ":p:~:.")
+        local branch = entry.branch or "global"
+        local icon = entry.icon or "󰈚"
+
+        -- Icon, Path, and Branch
+        local display_str = string.format("%s  %-30s  [%s]", icon, pretty_path, branch)
+
+        return {
+          value = entry,
+          display = display_str,
+          ordinal = pretty_path .. " " .. branch,
+          path = entry.file, -- Used by the previewer
+        }
+      end,
+    }),
+    sorter = conf.generic_sorter(opts),
+    previewer = conf.file_previewer(opts),
+    attach_mappings = function(prompt_bufnr, _)
+      actions.select_default:replace(function()
+        local selection = action_state.get_selected_entry()
+        actions.close(prompt_bufnr)
+
+        scratch.open({
+          file = selection.value.file,
+          name = selection.value.name,
+          ft = selection.value.ft,
+        })
+      end)
+      return true
+    end,
+  }):find()
+end
+
+local diff_vsplit = function(prompt_bufnr)
+  local actions = require("telescope.actions")
+  local action_state = require("telescope.actions.state")
+  local selection = action_state.get_selected_entry()
+  -- Close the telescope window before opening the diff
+  actions.close(prompt_bufnr)
+  -- selection.value contains the relative path to the file
+  vim.cmd("vert diffsplit " .. selection.value)
+end
+
 return {
   'nvim-telescope/telescope.nvim',
   version = '*', -- Recommended for Neovim 0.11+ compatibility
@@ -17,7 +96,7 @@ return {
     local action_layout = require("telescope.actions.layout")
     telescope.setup({
       defaults = {
-        path_display = { "smart" },
+        path_display = { "filename_first" },
         file_ignore_patterns = { "%.git/" }, -- Use %. to escape the dot in Lua patterns
         sorting_strategy = "ascending",
         layout_strategy = 'vertical',
@@ -41,6 +120,7 @@ return {
             ["<C-h>"] = actions.preview_scrolling_left,
             ["<C-l>"] = actions.preview_scrolling_right,
             ["<C-d>"] = actions.delete_buffer,
+            ["<C-s>"] = diff_vsplit,
             ["<C-t>"] = action_layout.toggle_preview,
             ["<esc>"] = actions.close,
           },
@@ -52,6 +132,7 @@ return {
             ["<C-h>"] = actions.preview_scrolling_left,
             ["<C-l>"] = actions.preview_scrolling_right,
             ["<C-d>"] = actions.delete_buffer,
+            ["<C-s>"] = diff_vsplit,
             ["<C-t>"] = action_layout.toggle_preview,
           },
         },
@@ -98,75 +179,6 @@ return {
     vim.keymap.set('n', '<leader>flr', builtin.lsp_references, { desc = 'Telescope LSP references' })
     vim.keymap.set('n', '<leader>fls', builtin.lsp_document_symbols, { desc = 'Telescope document symbols' })
 
-    local function snacks_scratch_telescope()
-      local scratch = require("snacks").scratch
-      local pickers = require("telescope.pickers")
-      local finders = require("telescope.finders")
-      local conf = require("telescope.config").values
-      local actions = require("telescope.actions")
-      local action_state = require("telescope.actions.state")
-      local themes = require("telescope.themes")
-
-      local items = scratch.list()
-
-      -- Sort by modification time (newest first)
-      table.sort(items, function(a, b)
-        return a.stat.mtime.sec > b.stat.mtime.sec
-      end)
-
-      -- GitHub-style: Dropdown appearance, but vertical with preview on top
-      local opts = themes.get_dropdown({
-        border = true,
-        previewer = true,
-        layout_strategy = "vertical",
-        layout_config = {
-          prompt_position = "top",
-          mirror = true, -- Flips layout: Preview moves to the top
-          width = 0.8,
-          height = 0.9,
-          preview_cutoff = 1,
-          anchor = "N",
-        },
-      })
-
-      pickers.new(opts, {
-        prompt_title = "Snacks Scratch Context",
-        finder = finders.new_table({
-          results = items,
-          entry_maker = function(entry)
-            local pretty_path = vim.fn.fnamemodify(entry.cwd, ":p:~:.")
-            local branch = entry.branch or "global"
-            local icon = entry.icon or "󰈚"
-
-            -- Clean display: Icon, Path, and Branch
-            local display_str = string.format("%s  %-30s  [%s]", icon, pretty_path, branch)
-
-            return {
-              value = entry,
-              display = display_str,
-              ordinal = pretty_path .. " " .. branch,
-              path = entry.file, -- Used by the previewer
-            }
-          end,
-        }),
-        sorter = conf.generic_sorter(opts),
-        previewer = conf.file_previewer(opts),
-        attach_mappings = function(prompt_bufnr, _)
-          actions.select_default:replace(function()
-            local selection = action_state.get_selected_entry()
-            actions.close(prompt_bufnr)
-
-            -- Crucial fix: Pass the file path to open the existing scratch
-            scratch.open({
-              file = selection.value.file,
-              name = selection.value.name,
-              ft = selection.value.ft,
-            })
-          end)
-          return true
-        end,
-      }):find()
-    end
 
     vim.keymap.set("n", "<leader>bs", snacks_scratch_telescope, { desc = "Telescope Snacks Scratch" })
 
