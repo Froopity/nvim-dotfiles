@@ -11,7 +11,7 @@ return {
     },
     mappings = {
       go_in_plus = 'L', -- Always close explorer when opening file
-      go_out = 'H',
+      go_out = 'H',     -- Use `H` isntead of `h`/`l` to make cursor movement easier
       go_in = '',
       go_out_plus = '',
     }
@@ -26,5 +26,30 @@ return {
       minifiles.open(path)
       minifiles.reveal_cwd()
     end, { desc = "Open Mini Files" } },
-  }
+  },
+  config = function(_, opts)
+    vim.api.nvim_create_autocmd('User', {
+      pattern = 'MiniFilesBufferCreate',
+      callback = function(args)
+        local minifiles = require('mini.files')
+        local buf_id = args.data.buf_id
+
+        -- Function to open the file under cursor as a vertical diffsplit
+        local diff_vsplit = function()
+          local entry = minifiles.get_fs_entry()
+
+          -- Only proceed if it's a file
+          if entry == nil or entry.fs_type == 'directory' then
+            return
+          end
+
+          -- Close the explorer before opening the split
+          minifiles.close()
+          vim.cmd('vert diffsplit ' .. entry.path)
+        end
+
+        vim.keymap.set('n', '<C-s>', diff_vsplit, { buffer = buf_id, desc = 'Vertical diffsplit' })
+      end,
+    })
+  end
 }

@@ -71,10 +71,18 @@ local diff_vsplit = function(prompt_bufnr)
   local actions = require("telescope.actions")
   local action_state = require("telescope.actions.state")
   local selection = action_state.get_selected_entry()
-  -- Close the telescope window before opening the diff
+  -- Fallback logic to find the best path string
+  local path = selection.path or selection.value or selection[1]
+
+  -- Close telescope first to return focus to the original buffer
   actions.close(prompt_bufnr)
-  -- selection.value contains the relative path to the file
-  vim.cmd("vert diffsplit " .. selection.value)
+
+  if path then
+    -- Use fnameescape to handle spaces/special chars in the path
+    vim.cmd("vert diffsplit " .. vim.fn.fnameescape(path))
+  else
+    vim.notify("Could not find path for selection", vim.log.levels.ERROR)
+  end
 end
 
 return {
@@ -88,7 +96,7 @@ return {
   keys = {
     "<leader>fr", "<leader>ff", "<leader>fb", "<leader>fg", "<leader>fG",
     "<leader>fh", "<leader>fn", "<leader>fd", "<leader>flr", "<leader>fls",
-    "<leader>bs", "<leader>fs",
+    "<leader>fs",
   },
   config = function()
     local telescope = require("telescope")
@@ -179,8 +187,6 @@ return {
     vim.keymap.set('n', '<leader>flr', builtin.lsp_references, { desc = 'Telescope LSP references' })
     vim.keymap.set('n', '<leader>fls', builtin.lsp_document_symbols, { desc = 'Telescope document symbols' })
 
-
-    vim.keymap.set("n", "<leader>bs", snacks_scratch_telescope, { desc = "Telescope Snacks Scratch" })
 
     vim.keymap.set("n", "<leader>fs", snacks_scratch_telescope, { desc = "Telescope Snacks Scratch" })
   end
