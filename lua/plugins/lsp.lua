@@ -15,9 +15,12 @@ return {
       return
     end
 
+    local _, custom_servers = pcall(require, 'user.local_lsp_custom')
+    if type(custom_servers) ~= 'table' then custom_servers = {} end
+
     require('mason-lspconfig').setup({ ensure_installed = servers })
 
-    for _, name in ipairs(servers) do
+    for _, name in ipairs(vim.list_extend(vim.deepcopy(servers), custom_servers)) do
       local found, config = pcall(require, 'lsp.' .. name)
       vim.lsp.config(name, found and config or {})
       local enabled, err = pcall(vim.lsp.enable, name)
