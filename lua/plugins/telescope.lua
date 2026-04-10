@@ -147,13 +147,13 @@ return {
       },
       pickers = {
         find_files = {
-          no_ignore = true,
+          -- no_ignore = true,
           hidden = true,
           follow = true,
         },
         live_grep = {
           additional_args = function()
-            return { "--unrestricted", "--follow" } -- Required for live_grep to see ignored files
+            return { "--follow" }
           end
         },
         buffers = {
@@ -174,10 +174,12 @@ return {
 
     -- Keymaps
     local builtin = require('telescope.builtin')
-    vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = 'Telescope find files' })
-    vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = 'Telescope find files' })
+    local menufacture = require('telescope').extensions.menufacture
+
+    vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = 'Telescope session list' })
+    vim.keymap.set('n', '<leader>ff', menufacture.find_files, { desc = 'Telescope find files' })
     vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = 'Telescope buffers' })
-    vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = 'Telescope live grep' })
+    vim.keymap.set('n', '<leader>fg', menufacture.live_grep, { desc = 'Telescope live grep' })
     vim.keymap.set('n', '<leader>fG', builtin.current_buffer_fuzzy_find, { desc = 'Telescope live buffer fuzzy' })
     vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = 'Telescope help tags' })
     vim.keymap.set('n', '<leader>fn', function()
