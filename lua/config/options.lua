@@ -34,7 +34,9 @@ vim.o.shiftwidth = 2
 vim.o.expandtab = true
 
 -- Completion menu: show even with one match, don't auto-select, show docs popup
-vim.o.completeopt = 'menuone,noselect,popup'
+vim.o.completeopt = 'fuzzy,menuone,noinsert,popup'
+vim.o.wildoptions = 'fuzzy,pum'
+vim.o.wildmode = 'noselect'
 
 -- Highlighty when yanking text
 vim.api.nvim_create_autocmd('TextYankPost', {
