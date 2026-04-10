@@ -28,10 +28,12 @@ return {
     end, { desc = "Open Mini Files" } },
   },
   config = function(_, opts)
+    local minifiles = require("mini.files")
+    minifiles.setup(opts)
+
     vim.api.nvim_create_autocmd('User', {
       pattern = 'MiniFilesBufferCreate',
       callback = function(args)
-        local minifiles = require('mini.files')
         local buf_id = args.data.buf_id
 
         -- Function to open the file under cursor as a vertical diffsplit
