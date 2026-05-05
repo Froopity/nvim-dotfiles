@@ -51,6 +51,17 @@ return {
         end
 
         vim.keymap.set('n', '<C-s>', diff_vsplit, { buffer = buf_id, desc = 'Vertical diffsplit' })
+
+        local set_cwd = function()
+          local entry = minifiles.get_fs_entry()
+          if entry == nil then return end
+          local dir = entry.fs_type == 'directory' and entry.path or vim.fn.fnamemodify(entry.path, ':h')
+          minifiles.close()
+          vim.fn.chdir(dir)
+          vim.cmd('enew')
+        end
+
+        vim.keymap.set('n', 'gd', set_cwd, { buffer = buf_id, desc = 'Set cwd to entry' })
       end,
     })
   end
