@@ -33,12 +33,14 @@ vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
 
--- Completion menu: show even with one match, don't auto-select, show docs popup
-vim.o.completeopt = 'fuzzy,menuone,noinsert,popup'
-vim.o.wildoptions = 'fuzzy,pum'
-vim.o.wildmode = 'noselect'
+-- Completion menu: show even with one match, don't auto-select, show docs popup, show extra preview thing
+vim.o.completeopt = 'fuzzy,menuone,noinsert,popup,preview'
 
--- Highlighty when yanking text
+-- Command tab-completion: Fuzzy match, use pop-up modal, match
+vim.o.wildoptions = 'fuzzy,pum'
+vim.o.wildmode = 'longest:full,full'
+
+-- Highlight when yanking text
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking text',
   callback = function()

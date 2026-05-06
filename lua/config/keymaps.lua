@@ -12,6 +12,26 @@ vim.keymap.set('n', 'q:', '<nop>')
 vim.keymap.set('n', '<A-j>', ':cnext<CR>')
 vim.keymap.set('n', '<A-k>', ':cprevious<CR>')
 
+-- Use tab to accept pum options, passthru enter
+-- Tab to cycle forward (and select)
+vim.keymap.set('i', '<Tab>', function()
+  return vim.fn.pumvisible() == 1 and '<C-n>' or '<Tab>'
+end, { expr = true })
+
+-- Shift-Tab to cycle backward
+vim.keymap.set('i', '<S-Tab>', function()
+  return vim.fn.pumvisible() == 1 and '<C-p>' or '<S-Tab>'
+end, { expr = true })
+
+-- Enter to ONLY insert a newline, never to confirm completion
+vim.keymap.set('i', '<CR>', function()
+  if vim.fn.pumvisible() == 1 then
+    -- <C-e> aborts the menu so Enter doesn't pick a match
+    return '<C-e><CR>'
+  end
+  return '<CR>'
+end, { expr = true })
+
 -- Select the last pasted text
 vim.keymap.set('n', 'gp', "'[v`]", { desc = "Select last pasted text" })
 
