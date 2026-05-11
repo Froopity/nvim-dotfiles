@@ -45,9 +45,10 @@ vim.api.nvim_create_autocmd("FileType", { -- Unmap enter when in QuickFix
   end,
 })
 
--- Copy/Delete entire buffer
+-- Actions on entire buffer
 vim.keymap.set('n', ' ya', "mqggyG'q", { desc = "Yank entire buffer" })
 vim.keymap.set('n', ' da', 'gg"_dG', { desc = "Delete entire buffer" })
+vim.keymap.set('n', ' gqa', "mqgggqG'q", { desc = "Format entire buffer" })
 
 -- LSP keymaps
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error under cursor' })
