@@ -158,6 +158,7 @@ return {
         },
         buffers = {
           initial_mode = "normal",
+          sorting_strategy = "ascending",
         },
         diagnostics = {
           initial_mode = "normal",
