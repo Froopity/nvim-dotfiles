@@ -35,6 +35,9 @@ end, { expr = true })
 -- Select the last pasted text
 vim.keymap.set('n', 'gp', "'[v`]", { desc = "Select last pasted text" })
 
+-- Paste unnamed register in insert mode
+vim.keymap.set({ 'c', 'i' }, '<C-g>', '<C-r>"', { desc = 'Paste latest yank' })
+
 -- Enter empty lines without switching to insert mode
 vim.keymap.set('n', '<CR>', 'o<Esc>')
 vim.keymap.set('n', '<S-CR>', 'm`O<Esc>``')
