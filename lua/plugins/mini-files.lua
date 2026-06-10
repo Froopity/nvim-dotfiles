@@ -58,7 +58,6 @@ return {
           local dir = entry.fs_type == 'directory' and entry.path or vim.fn.fnamemodify(entry.path, ':h')
           minifiles.close()
           vim.fn.chdir(dir)
-          vim.cmd('enew')
         end
 
         vim.keymap.set('n', 'gd', set_cwd, { buffer = buf_id, desc = 'Set cwd to entry' })
