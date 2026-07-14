@@ -35,6 +35,9 @@ end, { expr = true })
 -- Select the last pasted text
 vim.keymap.set('n', 'gp', "'[v`]", { desc = "Select last pasted text" })
 
+-- Quick replace with automatic escaping
+vim.keymap.set('x', '<leader>r', [["fy:%s/\V<C-r>=escape(@f, '/\')<CR>//g<Left><Left>]])
+
 -- Paste unnamed register in insert mode
 vim.keymap.set({ 'c', 'i' }, '<C-g>', '<C-r>"', { desc = 'Paste latest yank' })
 

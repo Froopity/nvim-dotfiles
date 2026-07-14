@@ -19,7 +19,7 @@ vim.o.cursorline = true
 -- I think this shows extra lines at the end of the file
 vim.o.scrolloff = 10
 
--- God knows
+-- Show tab character and trailiing spaces
 vim.o.list = true
 
 -- Show dialog when exiting without saving
@@ -32,6 +32,9 @@ vim.o.splitright = true
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
 vim.o.expandtab = true
+
+-- Break newlines on word
+vim.o.linebreak = true
 
 -- Completion menu: show even with one match, don't auto-select, show docs popup, show extra preview thing
 vim.o.completeopt = 'fuzzy,menuone,noinsert,popup,preview'

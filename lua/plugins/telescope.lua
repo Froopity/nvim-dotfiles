@@ -173,6 +173,9 @@ return {
     -- Load the fzf extension for better sorting performance
     telescope.load_extension("fzf")
 
+    -- Load the yank history plugin from yanky
+    telescope.load_extension("yank_history")
+
     -- Keymaps
     local builtin = require('telescope.builtin')
     local menufacture = require('telescope').extensions.menufacture
