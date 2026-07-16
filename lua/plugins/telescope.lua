@@ -130,7 +130,6 @@ return {
             ["<C-d>"] = actions.delete_buffer,
             ["<C-s>"] = diff_vsplit,
             ["<C-t>"] = action_layout.toggle_preview,
-            ["<esc>"] = actions.close,
           },
           n = {
             ["<C-k>"] = actions.move_selection_previous,

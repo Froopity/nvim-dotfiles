@@ -61,6 +61,7 @@ return {
         end
 
         vim.keymap.set('n', 'gd', set_cwd, { buffer = buf_id, desc = 'Set cwd to entry' })
+        vim.keymap.set('n', '<Esc>', minifiles.close, { buffer = buf_id, desc = 'Close MiniFiles' })
       end,
     })
   end
