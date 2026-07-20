@@ -66,3 +66,15 @@ vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
 vim.keymap.set('n', '<leader><ESC>', ':nohlsearch<CR>', { silent = true, desc = 'Remove search highlights' })
 
 vim.keymap.set('n', '<leader>wm', [[:%s/\r//g<CR>]], { silent = true, desc = 'Strip ^M from buffer' })
+
+-- Mouse: disable click/drag actions, keep scroll wheel, right click pastes without moving the cursor
+for _, key in ipairs({
+  '<LeftMouse>', '<LeftDrag>', '<LeftRelease>', '<2-LeftMouse>', '<3-LeftMouse>', '<4-LeftMouse>',
+  '<MiddleMouse>', '<MiddleDrag>', '<MiddleRelease>',
+  '<RightDrag>', '<RightRelease>', '<2-RightMouse>', '<3-RightMouse>', '<4-RightMouse>',
+}) do
+  vim.keymap.set({ 'n', 'v', 'i' }, key, '<Nop>')
+end
+
+vim.keymap.set({ 'n', 'v' }, '<RightMouse>', '"+p', { desc = 'Right click to paste' })
+vim.keymap.set('i', '<RightMouse>', '<C-r>+', { desc = 'Right click to paste' })

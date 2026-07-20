@@ -28,6 +28,10 @@ vim.o.confirm = true
 vim.o.splitbelow = true
 vim.o.splitright = true
 
+-- Mouse: no popup menu on right click, actions defined in keymaps.lua
+vim.o.mouse = 'a'
+vim.o.mousemodel = 'extend'
+
 -- Set tabs to 2 spaces
 vim.o.tabstop = 2
 vim.o.shiftwidth = 2
