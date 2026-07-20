@@ -8,6 +8,9 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 -- Unbind cmd-line window to stop accidental invocation. Use :<C-f> to open.
 vim.keymap.set('n', 'q:', '<nop>')
 
+-- Set cwd to current file
+vim.keymap.set('n', '<leader>gd', ':cd %:h', { desc = 'Set cwd to current file' })
+
 -- Use alt-j/k to navigate QuickFix menu
 vim.keymap.set('n', '<A-j>', ':cnext<CR>')
 vim.keymap.set('n', '<A-k>', ':cprevious<CR>')
@@ -60,7 +63,7 @@ vim.keymap.set('n', ' gqa', "mqgggqG'q", { desc = "Format entire buffer" })
 -- LSP keymaps
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic error under cursor' })
 vim.keymap.set('i', '<C-Space>', function() vim.lsp.completion.get() end, { desc = 'Trigger LSP completion' })
-vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { desc = 'Go to definition' })
+vim.keymap.set('n', 'grd', vim.lsp.buf.definition, { desc = 'Go to definition' })
 
 -- Misc
 vim.keymap.set('n', '<leader><ESC>', ':nohlsearch<CR>', { silent = true, desc = 'Remove search highlights' })
