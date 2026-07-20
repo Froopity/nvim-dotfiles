@@ -127,7 +127,6 @@ return {
             ["<Up>"] = actions.cycle_history_prev,
             ["<C-h>"] = actions.preview_scrolling_left,
             ["<C-l>"] = actions.preview_scrolling_right,
-            ["<C-d>"] = actions.delete_buffer,
             ["<C-s>"] = diff_vsplit,
             ["<C-t>"] = action_layout.toggle_preview,
           },
@@ -138,7 +137,6 @@ return {
             ["<Up>"] = actions.cycle_history_prev,
             ["<C-h>"] = actions.preview_scrolling_left,
             ["<C-l>"] = actions.preview_scrolling_right,
-            ["<C-d>"] = actions.delete_buffer,
             ["<C-s>"] = diff_vsplit,
             ["<C-t>"] = action_layout.toggle_preview,
           },
@@ -158,6 +156,14 @@ return {
         buffers = {
           initial_mode = "normal",
           sorting_strategy = "ascending",
+          mappings = {
+            i = {
+              ["<M-d>"] = actions.delete_buffer,
+            },
+            n = {
+              ["<M-d>"] = actions.delete_buffer,
+            },
+          },
         },
         diagnostics = {
           initial_mode = "normal",
