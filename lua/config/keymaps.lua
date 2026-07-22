@@ -9,7 +9,7 @@ vim.keymap.set('t', '<Esc>', '<C-\\><C-n>')
 vim.keymap.set('n', 'q:', '<nop>')
 
 -- Set cwd to current file
-vim.keymap.set('n', '<leader>gd', ':cd %:h', { desc = 'Set cwd to current file' })
+vim.keymap.set('n', '<leader>gd', ':cd %:h<CR>', { desc = 'Set cwd to current file' })
 
 -- Use alt-j/k to navigate QuickFix menu
 vim.keymap.set('n', '<A-j>', ':cnext<CR>')

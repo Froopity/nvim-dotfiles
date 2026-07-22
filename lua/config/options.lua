@@ -16,8 +16,11 @@ vim.o.smartcase = true
 -- Highlight current line
 vim.o.cursorline = true
 
--- I think this shows extra lines at the end of the file
+-- I think this shows extra lines past the end of the file
 vim.o.scrolloff = 10
+
+-- Count display lines when scrolling instead of file lines, helps files with many wrapped lines
+vim.o.smoothscroll = true
 
 -- Show tab character and trailiing spaces
 vim.o.list = true
@@ -54,6 +57,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
     vim.hl.on_yank()
   end,
 })
+
+-- transparent background
+vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
+-- vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
+-- vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
+-- vim.api.nvim_set_hl(0, 'Pmenu', { bg = 'none' })
+
+-- Use full terminal colours
+vim.opt.termguicolors = true
 
 -- Something about removing hl after search, didn't appear to work
 -- vim.cmd('packadd! nohlsearch')
