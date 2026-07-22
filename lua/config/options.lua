@@ -43,12 +43,22 @@ vim.o.expandtab = true
 -- Break newlines on word
 vim.o.linebreak = true
 
--- Completion menu: show even with one match, don't auto-select, show docs popup, show extra preview thing
-vim.o.completeopt = 'fuzzy,menuone,noinsert,popup,preview'
+-- Completion menu: fuzzy match, show even with one match, don't auto-insert
+-- until a match is chosen with C-n/C-p, show docs popup
+vim.o.completeopt = 'fuzzy,menuone,noselect,popup'
 
--- Command tab-completion: Fuzzy match, use pop-up modal, match
+-- Command tab-completion: Fuzzy match, use pop-up modal, don't pre-select
+-- until a match is chosen, keep fuzzy matching as you keep typing
 vim.o.wildoptions = 'fuzzy,pum'
-vim.o.wildmode = 'longest:full,full'
+vim.o.wildmode = 'noselect:lastused,full'
+
+-- Show the cmdline completion pum as you type, not just on <Tab>
+vim.api.nvim_create_autocmd('CmdlineChanged', {
+  pattern = { ':', '/', '?' },
+  callback = function()
+    vim.fn.wildtrigger()
+  end,
+})
 
 -- Highlight when yanking text
 vim.api.nvim_create_autocmd('TextYankPost', {

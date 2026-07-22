@@ -15,24 +15,20 @@ vim.keymap.set('n', '<leader>gd', ':cd %:h<CR>', { desc = 'Set cwd to current fi
 vim.keymap.set('n', '<A-j>', ':cnext<CR>')
 vim.keymap.set('n', '<A-k>', ':cprevious<CR>')
 
--- Use tab to accept pum options, passthru enter
--- Tab to cycle forward (and select)
+-- Tab/Shift-Tab to select the next/previous completion match, same as C-n/C-p
 vim.keymap.set('i', '<Tab>', function()
   return vim.fn.pumvisible() == 1 and '<C-n>' or '<Tab>'
 end, { expr = true })
-
--- Shift-Tab to cycle backward
 vim.keymap.set('i', '<S-Tab>', function()
   return vim.fn.pumvisible() == 1 and '<C-p>' or '<S-Tab>'
 end, { expr = true })
 
--- Enter to ONLY insert a newline, never to confirm completion
-vim.keymap.set('i', '<CR>', function()
-  if vim.fn.pumvisible() == 1 then
-    -- <C-e> aborts the menu so Enter doesn't pick a match
-    return '<C-e><CR>'
-  end
-  return '<CR>'
+-- Keep Up/Down as command-line history recall even while the wildmenu pum is open
+vim.keymap.set('c', '<Up>', function()
+  return vim.fn.wildmenumode() == 1 and '<C-e><Up>' or '<Up>'
+end, { expr = true })
+vim.keymap.set('c', '<Down>', function()
+  return vim.fn.wildmenumode() == 1 and '<C-e><Down>' or '<Down>'
 end, { expr = true })
 
 -- Select the last pasted text
