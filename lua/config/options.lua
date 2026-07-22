@@ -58,14 +58,5 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
--- transparent background
-vim.api.nvim_set_hl(0, 'Normal', { bg = 'none' })
--- vim.api.nvim_set_hl(0, 'NormalFloat', { bg = 'none' })
--- vim.api.nvim_set_hl(0, 'FloatBorder', { bg = 'none' })
--- vim.api.nvim_set_hl(0, 'Pmenu', { bg = 'none' })
-
--- Use full terminal colours
-vim.opt.termguicolors = true
-
--- Something about removing hl after search, didn't appear to work
--- vim.cmd('packadd! nohlsearch')
+-- Set colorscheme
+vim.cmd [[colorscheme onehalfdark]]
